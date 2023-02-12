@@ -93,14 +93,14 @@ def clean_nb(
     clean_ids=True, # Remove ids from plaintext reprs?
 ):
     "Clean `nb` from superfluous metadata"
-    assert isinstance(nb, AttrDict)
+    if not isinstance(nb, AttrDict): nb = dict2nb(nb)
     metadata_keys = {"kernelspec", "jekyll", "jupytext", "doc", "widgets"}
     if allowed_metadata_keys: metadata_keys.update(allowed_metadata_keys)
     cell_metadata_keys = {"hide_input"}
     if allowed_cell_metadata_keys: cell_metadata_keys.update(allowed_cell_metadata_keys)
     for c in nb['cells']: _clean_cell(c, clear_all, cell_metadata_keys, clean_ids)
     if nested_attr(nb, 'metadata.kernelspec.name'):
-        nb['metadata']['kernelspec']['display_name'] = nb.metadata.kernelspec.name
+        nb.metadata.kernelspec['display_name'] = nb.metadata.kernelspec.name
     nb['metadata'] = {k:v for k,v in nb['metadata'].items() if k in metadata_keys}
 
 # %% ../nbs/api/11_clean.ipynb 27
